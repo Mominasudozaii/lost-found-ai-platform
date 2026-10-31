@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Recoverly – AI-powered lost and found platform">
+  <title>Recoverly — Lost & Found</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <main id="authScreen" class="auth-layout">
+    <section class="brand-panel">
+      <a class="brand" href="#"><span class="brand-mark">R</span> Recoverly</a>
+      <div class="hero-copy">
+        <p class="eyebrow">AI-POWERED COMMUNITY RECOVERY</p>
+        <h1>Lost things deserve a way back.</h1>
+        <p>Report an item, search by location or image, and let smart matching surface the connections that matter.</p>
+      </div>
+      <div class="hero-stats"><span>🔎 Smart matching</span><span>🖼️ Visual search</span><span>🔒 Private chat</span></div>
+    </section>
+    <section class="auth-panel">
+      <div class="auth-card">
+        <p class="eyebrow">WELCOME</p>
+        <h2 id="authTitle">Welcome back</h2>
+        <p class="muted" id="authSubtitle">Sign in to manage your reports and matches.</p>
+        <form id="loginForm" class="stack">
+          <label>Email<input name="email" type="email" autocomplete="email" required></label>
+          <label>Password<input name="password" type="password" autocomplete="current-password" required></label>
+          <button class="button primary" type="submit">Sign in</button>
+        </form>
+        <form id="signupForm" class="stack hidden">
+          <label>Your name<input name="name" autocomplete="name" minlength="2" required></label>
+          <label>Email<input name="email" type="email" autocomplete="email" required></label>
+          <label>Password <small>8 characters minimum</small><input name="password" type="password" autocomplete="new-password" minlength="8" required></label>
+          <button class="button primary" type="submit">Create account</button>
+        </form>
+        <p class="switch-auth"><span id="switchLabel">New here?</span> <button id="switchAuth" class="text-button" type="button">Create an account</button></p>
+      </div>
+    </section>
+  </main>
+
+  <div id="appShell" class="app-shell hidden">
+    <aside class="sidebar">
+      <a class="brand" href="#"><span class="brand-mark">R</span> Recoverly</a>
+      <nav class="main-nav" aria-label="Main navigation">
+        <button class="nav-link active" data-view="browse"><span>⌕</span> Browse</button>
+        <button class="nav-link" data-view="report-lost"><span>↘</span> Report lost</button>
+        <button class="nav-link" data-view="report-found"><span>↗</span> Report found</button>
+        <button class="nav-link" data-view="visual"><span>◉</span> Image search</button>
+        <button class="nav-link" data-view="assistant"><span>✦</span> AI assistant</button>
+        <button class="nav-link" data-view="messages"><span>◌</span> Messages</button>
+        <button class="nav-link" data-view="reports"><span>▣</span> My reports</button>
+      </nav>
+      <div class="sidebar-bottom"><p class="muted tiny">Your contact information is never shown publicly.</p><button id="logoutButton" class="nav-link danger"><span>↪</span> Sign out</button></div>
+    </aside>
+
+    <section class="workspace">
+      <header class="topbar">
+        <button id="mobileMenu" class="icon-button mobile-only" aria-label="Open menu">☰</button>
+        <div><p id="pageKicker" class="eyebrow">DISCOVER</p><h1 id="pageTitle">Find what belongs to you</h1></div>
+        <div class="top-actions">
+          <button id="notificationButton" class="icon-button notification" aria-label="Notifications">♟<span id="notificationCount" class="count hidden">0</span></button>
+          <button id="profileButton" class="profile-button"><span id="profileInitial">U</span><strong id="profileName">User</strong></button>
+        </div>
+        <div id="notificationPanel" class="popover hidden"><div class="popover-head"><strong>Notifications</strong><button id="readNotifications" class="text-button">Mark read</button></div><div id="notificationList" class="notification-list"></div></div>
+      </header>
+
+      <div class="views">
+        <section id="browseView" class="view">
+          <div class="spotlight">
+            <div><p class="eyebrow">ONE SEARCH, EVERY REPORT</p><h2>Find nearby reports and potential matches.</h2><p>Search titles, descriptions, keywords, and landmarks across lost and found items.</p></div>
+            <div id="stats" class="stat-row"></div>
+          </div>
+          <form id="searchForm" class="search-bar"><input id="searchInput" placeholder="Try “black leather wallet near university”" aria-label="Search reports"><button class="button primary">Search</button></form>
+          <div class="filter-row">
+            <select id="typeFilter" aria-label="Report type"><option value="">All reports</option><option value="lost">Lost</option><option value="found">Found</option></select>
+            <select id="categoryFilter" aria-label="Category"><option value="">All categories</option></select>
+            <button id="nearMeButton" type="button" class="button secondary">⌖ Search near me</button>
+            <button id="socialButton" type="button" class="button subtle">Search connected social posts</button>
+          </div>
+          <div id="socialResults" class="social-results hidden"></div>
+          <div id="itemGrid" class="card-grid"></div>
+        </section>
+
+        <section id="report-lostView" class="view hidden"><div class="section-heading"><p class="eyebrow">CREATE REPORT</p><h2>Report a lost item</h2><p class="muted">The more distinctive details you add, the better the match recommendations.</p></div><div id="lostFormMount"></div></section>
+        <section id="report-foundView" class="view hidden"><div class="section-heading"><p class="eyebrow">CREATE REPORT</p><h2>Report a found item</h2><p class="muted">Keep exact identifying details private until the owner can verify them.</p></div><div id="foundFormMount"></div></section>
+
+        <section id="visualView" class="view hidden">
+          <div class="section-heading"><p class="eyebrow">COMPUTER VISION</p><h2>Search with an image</h2><p class="muted">A private perceptual hash compares the image you upload to report photos. Your search photo is not saved.</p></div>
+          <form id="visualForm" class="visual-form"><label class="drop-zone">📷 <strong>Choose a clear image of the item</strong><small>JPEG, PNG, or WebP — up to 5 MB</small><input name="image" type="file" accept="image/jpeg,image/png,image/webp" required></label><label>Limit to a category<select id="visualCategory" name="category"><option value="">All categories</option></select></label><button class="button primary" type="submit">Find similar items</button></form>
+          <div id="visualResults" class="card-grid results-space"></div>
+        </section>
+
+        <section id="assistantView" class="view hidden">
+          <div class="assistant-layout"><div class="assistant-intro"><p class="eyebrow">RECOVERLY ASSISTANT</p><h2>Describe what happened.</h2><p>Ask naturally. The agent extracts meaningful details, ranks relevant database reports, and explains the result.</p><div class="prompt-chips"><button data-prompt="I lost my black leather wallet near the university.">Black wallet near university</button><button data-prompt="Has anyone found a blue student ID around the library?">Blue student ID at library</button></div></div><div class="chat-card"><div id="assistantMessages" class="assistant-messages"><div class="assistant-message bot">Hi! Tell me what you lost or found, including color, location, and any distinctive features.</div></div><form id="assistantForm" class="assistant-input"><input name="question" placeholder="I lost my…" required><button class="button primary">Ask</button></form></div></div>
+        </section>
+
+        <section id="messagesView" class="view hidden"><div class="section-heading"><p class="eyebrow">PRIVATE CHAT</p><h2>Conversations</h2><p class="muted">Use chat to verify ownership without exposing phone numbers publicly.</p></div><div class="messages-layout"><div id="conversationList" class="conversation-list"></div><div id="messagePane" class="message-pane empty-pane">Select a conversation to view messages.</div></div></section>
+
+        <section id="reportsView" class="view hidden"><div class="section-heading inline-heading"><div><p class="eyebrow">YOUR ACTIVITY</p><h2>My reports</h2></div><button id="editProfileButton" class="button secondary">Edit profile</button></div><div id="profileEditor" class="profile-editor hidden"><form id="profileForm" class="inline-form"><label>Your name<input name="name" required></label><label>Email<input name="email" type="email" required></label><button class="button primary">Save changes</button></form></div><div id="myReports" class="card-grid"></div></section>
+      </div>
+    </section>
+  </div>
+
+  <dialog id="detailDialog" class="dialog"><button id="closeDialog" class="dialog-close" aria-label="Close">×</button><div id="detailContent"></div></dialog>
+  <template id="reportTemplate"><form class="report-form"><div class="form-grid"><label>Item name<input name="title" maxlength="140" placeholder="e.g. Black leather wallet" required></label><label>Category<select name="category" class="category-select" required></select></label><label>Color<input name="color" maxlength="80" placeholder="e.g. Black"></label><label>Keywords <small>comma-separated</small><input name="keywords" placeholder="leather, cards, initials"></label><label class="wide">Description<textarea name="description" maxlength="3000" placeholder="Describe distinctive marks, contents, or condition."></textarea></label><label>Location / landmark<input name="locationName" maxlength="180" placeholder="e.g. Main library entrance" required></label><label>Date and time <small>optional</small><input name="occurredAt" type="datetime-local"></label><label>Latitude <small>optional</small><input name="latitude" type="number" step="0.000001" min="-90" max="90" placeholder="33.6844"></label><label>Longitude <small>optional</small><input name="longitude" type="number" step="0.000001" min="-180" max="180" placeholder="73.0479"></label><label class="wide">Photos <small>up to five JPEG, PNG, or WebP images</small><input name="images" type="file" multiple accept="image/jpeg,image/png,image/webp"></label><label class="wide found-only">WhatsApp number <small>optional — visible only to you; use built-in chat to connect</small><input name="whatsapp" maxlength="30" placeholder="+92…"></label></div><div class="form-footer"><p class="muted tiny">By posting, you confirm the details are accurate and safe to share.</p><button class="button primary" type="submit">Publish report</button></div></form></template>
+  <script src="/app.js"></script>
+</body>
+</html>
+
